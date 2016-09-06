@@ -1,0 +1,23 @@
+{
+  "visual": {
+    "name": "demoVisual",
+    "displayName": "DemoVisual",
+    "guid": "PBI_CV_CA3EAC73_FCA2_428A_AA5B_CA4DB4ADD2A4",
+    "visualClassName": "Visual",
+    "version": "1.0.0",
+    "description": "",
+    "supportUrl": "",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "1.1.0",
+  "author": {
+    "name": "",
+    "email": ""
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.demo1.json"
+}
