@@ -1,8 +1,13 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* Some Power BI love with coloring */
+.uk-button {
+    background-color: #f2c811;
+    color: #000;
 }
 
 a {
-  color: #00B7FF;
+  color: #f2c811;
+}
+
+a:hover {
+  color: #b6980A;
 }

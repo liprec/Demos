@@ -1,19 +1,20 @@
-<html>
+<html class="uk-touch">
     <head>
         <title>Power BI Embedded demo</title>
         <script src="javascripts/jquery.min.js"></script>
         <script src="javascripts/powerbi.min.js"></script>
+        <script src="javascripts/uikit.min.js"></script>
         <script src="app/config.js"></script>
+        <link rel="stylesheet" href="stylesheets/uikit.min.css">
         <link rel="stylesheet" href="stylesheets/style.css">
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
     </head>
-    <body>
+    <body class="uk-container">
         <h1>Power BI Embedded demos - Filtering</h1>
         <a href="index.html" style="float:right">Back to the index</a>
-        <div>Demo showing the ability to filter the embedded report using a application set filter</div>
+        <div class="uk-article">Demo showing the ability to filter the embedded report using a application set filter</div>
         <div>&nbsp;</div>
-        <div id="filter" class="pure-button">Filter report (Territory = MD)</div>
-        <div id="clear" class="pure-button">Clear filter</div>
+        <div id="filter" class="uk-button">Filter report (Territory = MD)</div>
+        <div id="clear" class="uk-button">Clear filter</div>
         <div>&nbsp;</div>
         <div id="reportstatic" class="powerbi-container"></div>
 
