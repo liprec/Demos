@@ -1,0 +1,17 @@
+﻿iframe {
+    background-color: transparent;
+    border: 0px none transparent;
+    padding: 0px;
+    overflow: hidden;
+}
+
+/* Some Power BI love with coloring */
+.uk-button {
+    background-color: #f2c811;
+    color: #000;
+}
+
+.uk-subnav-pill .uk-active * {
+    background-color: #f2c811;
+    color: #000;
+}

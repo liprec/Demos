@@ -1,0 +1,35 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html class="uk-touch">
+<head runat="server">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.1/js/uikit.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.1/css/uikit.min.css" />
+    
+    <link href="Default.css" rel="stylesheet" type="text/css" />
+    <title>PowerBI REST API Embed tiles</title>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body >
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="AJAXScriptManager" runat="server"></asp:ScriptManager>
+        <div class="uk-container">
+            <h1>Power BI REST API Demos</h1>
+            <ul class="uk-subnav uk-subnav-pill" data-uk-switcher="{connect:'#demoId'}">
+                <li><a href="#">Authorization</a></li>
+                <li><a href="#">Single Tile</a></li>
+                <li><a href="#">Complete report</a></li>
+            </ul>
+
+            <ul id="demoId" class="uk-switcher">
+                <li><asp:ContentPlaceHolder id="SigninHeader" runat="server" /></li>
+                <li><asp:ContentPlaceHolder id="PowerBIDashboardTile" runat="server" /></li>
+                <li><asp:ContentPlaceHolder id="PowerBISingleReport" runat="server" /></li>
+            </ul>
+        </div>
+    </form>
+</body>
+</html>
