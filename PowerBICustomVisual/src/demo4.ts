@@ -29,13 +29,59 @@
 /*
  * Demo 4:
  *     - Adding d3.js reference as PowerBI is using d3.js
- *     - Adding a d3.js SVG object to the visual 
+ *     - Adding a d3.js methods to a SVG object the visual 
  */
 
 module powerbi.extensibility.visual {
+    // Single visual dataPoint
+    export interface VisualDataPoint {
+        category: string;
+        value: number;
+    }
+
+    // Collection of visual dataPoint. Length === # categories 
+    export interface VisualDataPoints {
+        dataPoints: VisualDataPoint[]
+    }
+
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
+        private dataView: DataView;
+
+        private convertor(dataView: DataView) : VisualDataPoints {
+            // Check if given dataView is not empty
+            if (!dataView ||
+                !dataView.categorical ||
+                !dataView.categorical.categories ||
+                !dataView.categorical.categories[0].source) {
+                return {
+                    dataPoints: []
+                }
+            }
+
+            let dataPoints: VisualDataPoint[] = [];
+            let categories = dataView.categorical.categories[0].values;
+            let values = dataView.categorical.values[0].values;
+
+            // Loop thru category values
+            for (let i = 0; i < categories.length; i++) {
+                // Get category and value
+                let category = categories[i];
+                let value = values[i];
+
+                // Create dataPoint and push it into the dataPoints array
+                dataPoints.push({
+                    category: category,
+                    value: value
+                })
+            }
+
+            // Return dataPoints array
+            return {
+                dataPoints: dataPoints
+            }
+        }
 
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
@@ -45,11 +91,94 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {
             console.log('Visual update', options);
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+            // Store dataView object
+            this.dataView = options.dataViews[0];
+
+            // Clear old information
+            this.target.innerHTML = "";
+            
+            // Convert dataView object to usable dataPoints
+            let visualDataPoints = this.convertor(options.dataViews[0]);
+            let dataPoints = visualDataPoints.dataPoints;
+
+            // Add header depending on settings
+            let objects = this.dataView.metadata.objects; // Get metadata object
+
+            if (this.getShowSetting(objects)) {
+                this.target.innerHTML += `<h1 style="color:${(this.getColorSetting(objects))}">${(this.getTitleSetting(objects))}</h1>`;
+            } 
+
+            // Loop thru dataPoints and print content (category and value) 
+            for (let i = 0; i < dataPoints.length; i++) {
+                this.target.innerHTML += `<p>DataPoint: category: <em>${(dataPoints[i].category)}</em> and value <em>${(dataPoints[i].value)}</em></p>`;
+            }
         }
 
         public destroy(): void {
             //TODO: Perform any cleanup tasks here
+        }
+
+        private getShowSetting(objects: DataViewObjects): boolean {
+            return this.getValue<boolean>(objects, "header", "show", true);
+        }
+
+        private getTitleSetting(objects: DataViewObjects): string {
+            return this.getValue<string>(objects, "header", "title", "Default Title");
+        }
+
+        private getColorSetting(objects: DataViewObjects): string {
+            return this.getColor(objects, "header", "color", "#777");
+        }
+
+        // Function for retrieving property values
+        private getValue<T>(objects: DataViewObject, objectName: string, propertyName: string, defaultValue: T): T {
+            if(objects) { // check if exist 
+                let object = objects[objectName];
+                if(object) { // check if exist
+                    let property: T = object[propertyName];
+                    if(property !== undefined) { // check if exist
+                        return property; // return stored value
+                    }
+                }
+            }
+            return defaultValue
+        }
+
+        // Function for retrieving color values
+        private getColor(objects: DataViewObject, objectName: string, propertyName: string, defaultValue: string): string {
+            if(objects) { // check if exist 
+                let object = objects[objectName];
+                if(object) { // check if exist
+                    let property = object[propertyName];
+                    if(property !== undefined) { // check if exist
+                        return property["solid"]["color"]; // return stored color value
+                    }
+                }
+            }
+            return defaultValue
+        }
+
+        // IVisual method for populating Formatting Pane objects
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+            let objectName = options.objectName;
+            let objectEnumeration: VisualObjectInstance[] = []; // Return object
+            let objects = this.dataView.metadata.objects; // Metedata objects
+
+            switch(objectName) {
+                case "header": // Allign with capabilities definition
+                    objectEnumeration.push({
+                        objectName: objectName,
+                        properties: {
+                            title: this.getTitleSetting(objects),
+                            show: this.getShowSetting(objects),
+                            color: this.getColorSetting(objects)
+                        },
+                        selector: null
+                    }); 
+                    break;
+            }
+
+            return objectEnumeration;
         }
     }
 }

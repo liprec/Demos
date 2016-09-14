@@ -34,9 +34,54 @@
  */
 
 module powerbi.extensibility.visual {
+    // Single visual dataPoint
+    export interface VisualDataPoint {
+        category: string;
+        value: number;
+    }
+
+    // Collection of visual dataPoint. Length === # categories 
+    export interface VisualDataPoints {
+        dataPoints: VisualDataPoint[]
+    }
+
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
+
+        private convertor(dataView: DataView) : VisualDataPoints {
+            // Check if given dataView is not empty
+            if (!dataView ||
+                !dataView.categorical ||
+                !dataView.categorical.categories ||
+                !dataView.categorical.categories[0].source) {
+                return {
+                    dataPoints: []
+                }
+            }
+
+            let dataPoints: VisualDataPoint[] = [];
+            let categories = dataView.categorical.categories[0].values;
+            let values = dataView.categorical.values[0].values;
+
+            // Loop thru category values
+            for (let i = 0; i < categories.length; i++) {
+                // Get category and value
+                let category = categories[i];
+                let value = values[i];
+
+                // Create dataPoint and push it into the dataPoints array
+                dataPoints.push({
+                    category: category,
+                    value: value
+                })
+            }
+
+            // Return dataPoints array
+            return {
+                dataPoints: dataPoints
+            }
+        }
 
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
@@ -46,7 +91,18 @@ module powerbi.extensibility.visual {
 
         public update(options: VisualUpdateOptions) {
             console.log('Visual update', options);
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+
+            // Clear old information
+            this.target.innerHTML = "";
+            
+            // Convert dataView object to usable dataPoints
+            let visualDataPoints = this.convertor(options.dataViews[0]);
+            let dataPoints = visualDataPoints.dataPoints;
+
+            // Loop thru dataPoints and print content (category and value) 
+            for (let i = 0; i < dataPoints.length; i++) {
+                this.target.innerHTML += `<p>DataPoint: category: <em>${(dataPoints[i].category)}</em> and value <em>${(dataPoints[i].value)}</em></p>`;
+            }
         }
 
         public destroy(): void {

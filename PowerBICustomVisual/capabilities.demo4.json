@@ -33,5 +33,34 @@
                 }
             }
         }
-    ]
+    ],
+    "objects": {
+        "header": {
+            "displayName": "Header",
+            "properties": {
+                "title": {
+                    "displayName": "Title",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "color": {
+                    "displayName": "Color",
+                    "type": { 
+                        "fill": { 
+                            "solid": { 
+                                "color": true 
+                            } 
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

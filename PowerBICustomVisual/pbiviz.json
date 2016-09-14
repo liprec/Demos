@@ -19,5 +19,5 @@
   },
   "externalJS": [],
   "style": "style/visual.less",
-  "capabilities": "capabilities.demo1.json"
+  "capabilities": "capabilities.demo3.json"
 }
