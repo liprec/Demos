@@ -1,2 +1,5 @@
-var appToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlciBCSSBOb2RlIFNESyIsIndjbiI6InBvd2VyYmktZGVtby1qcHBwLW9yZyIsIndpZCI6IjQ0MjVjZGFkLTBiOWEtNGU1Ny05MzQ1LTBlNjIyYjY4YTdkNyIsInJpZCI6ImQ2MzA2MzBiLTgzOGUtNGRmYS04YWFkLTYzNTVkMTg1MzE0MCIsIm5iZiI6MTQ3MzY2MTk3NywiZXhwIjoxNDczNjY1NTc3fQ.y2mTudp1J9VabFy1ipMmBhcpsff36eUCUFEMkU3bIJM';
-var reportId = 'd630630b-838e-4dfa-8aad-6355d1853140';
+var appToken = 'ey...20';
+var appTokenPBI = 'ey...UQ';
+
+var reportId = 'd6...40';
+var reportIdPBI = '8e...0c';
