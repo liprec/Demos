@@ -1,0 +1,21 @@
+-- Directly select the input information and some extra infomatio
+-- and output it 'windowed' to Power BI
+SELECT
+    dspl,
+    max(hmdt) as hmdt,
+    max(temp) as temp,
+    System.TimeStamp AS time,
+    15 as minTemp,
+    30 as maxTemp,
+    22 as targetTemp,
+    100 as maxHmdt,
+    70 as targetHmdt
+INTO
+    [output]      -- Power BI output name
+FROM
+    [Input]       -- Event Hub input name
+WHERE
+    dsplid IN (1)    -- Additional sensors can be added
+GROUP BY
+    dspl,
+    TumblingWindow(second, 1)
