@@ -19,21 +19,21 @@ These HOL examples are part of a total data scenario. For this event, the sensor
 #### Lab 1 - Ingest
 When connection data from the Event Hub to Azure Stream Analytics (ASA) it is possible to process that data stream directly and 'query' to either determine outliers of to reroute the data stream.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureStreamAnalytics/README.md)
+[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureStreamAnalytics/)
 
 #### Lab 2 - Store and prepare
 The rerouted data from Azure Stream Analytics (ASA) can be stored at an Azure Data Lake Store (ADLS) directly in a folder.
 
 After storing the raw data, it is possible to extract information from it by utilizing Azure Data Lake Analytics (ADLA). With U-SQL it is possible to read individual files (JSON) and extract information within one query.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureDataLake/README.md)
+[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureDataLake/)
 
 #### Lab 3 - Learning
 The result of lab 2 will be used to start learning from the data. By using Azure Machine Learning (AzureML) it is possible to create a ML model that identifies incorrect events and even faulty sensors.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureMachineLearning/README.md)
+[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureMachineLearning/)
 
 #### Extra - Close the loop
 It is possible to connect an AzureML model to an Azure Stream Analytics Job and use the outcome of that model to predict the incoming events.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/CloseTheLoop/README.md)
+[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/CloseTheLoop/)
