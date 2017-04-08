@@ -14,13 +14,25 @@ If needed create an Azure Stream Analytics resource in the Azure Portal.
 Next step is to create an input for the Azure Stream Analytics job.
 1. In the 'Overview' of the Stream Analytics job blade click on 'Inputs'
 2. Click on '+ Add'
-3. Provide a logical input alias
+3. Provide a logical input alias. This name is used later in the query
 4. Make sure that the type is 'Data Stream' and source is 'Event hub'
 5. Choose 'Provide event hub settings manually'
 6. Fill the remaining values with the values from the Excel sheet.
 7. Make sure that the 'Event hub consumer group' is set to the correct value to minimize the interferance with the others members
 8. Keep the default format and enconding
-9. Finish by clicking the 'Create' button
+9. Click on 'Create' to finilize the input definition
+
+### Sample Input
+
+Now that the input is created we can download some sample data that we need when testing the Stream Analytics queries
+
+1. Click on the newly created input
+2. Click on the 'Sample Data' on the top menu of the blade
+3. A new blade is opening and prefilled with the default date and time
+4. Alter the start time and the duration to gather the events of the last hour.
+5. After clicking 'OK' a background task is triggered
+6. After that background task is finished you will get a natification
+7. Open that notification and download the sample JSON to disk.
 
 With these steps we have created a connection to an event hub that is providing temperature sensor data and have this datastream available as input.
 
@@ -30,7 +42,7 @@ After we created an input for the ASA job, an output is also needed.
 
 1. In the 'Overview' of the Stream Analytics job blade click on 'Outputs'
 2. Click on '+ Add'
-3. Provide a logical input alias
+3. Provide a logical output alias
 4. Make sure that the 'Sink' is set to 'Power BI'
 5. Click on authorize and provide login details (work email!) and additional authorizations
 6. After a succesful authorization provide the additional detials, like workspace, dataset and table name
@@ -61,9 +73,21 @@ After creating the job we can start it by pressing the 'Start' button. It takes 
 
 In the meantime we can start creating a Power BI dashboard.
 1. Login to the Power BI portal via https://powerbi.com
-2. Create a new dashboard
+2. Navigate to the DataSets. Make sure you navigate to the same workspace as used when creating the output
+3. Click at 'Create Report' under actions to create a new report
+4. Create a visual, eq line chart, and use a value as 'Values' and the time as 'Axis'
+5. Save the report and pin the visual to a new dashboard
+6. Open the dashboard and observe
 
 ### Add windowing
+
+A typical scenario with streaming data is that we are interested in (average) values during a period of time. Usually one single spike in the observations is not really a problem, but if it us recurring it will be. With Stream Analytics we can create a window and push the values of that window to the output.
+
+1. Look at the window functionality at: https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-window-functions
+2. Now create a query that creates a window of 1 second and returns only the maximum of the 'temp' and 'hmdt' value
+3. You can of course test your query by uploading the test sample
+
+Now that we have looked at (some) capabilities of Azure Stream Analytics fele free to experiment and look at the result in Power BI.
 
 ### Reference
 ASA query language: https://msdn.microsoft.com/library/azure/dn834998.aspx

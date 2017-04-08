@@ -1,0 +1,18 @@
+﻿// Define start variables
+DECLARE @INPUT_PATH string = "globalazure/{date:yyyy}/{date:MM}/{date:dd}/{*}.json";
+DECLARE @OUTPUT_PATH string = "globalazure/output/02.demo.out";
+
+// Extract
+@Rows =
+	EXTRACT
+		  row string
+		, date DateTime // Additional virtual column
+	FROM
+		@INPUT_PATH
+	USING
+		Extractors.Text(delimiter: '\n');
+
+// Output
+OUTPUT @Rows
+TO @OUTPUT_PATH
+USING Outputters.Csv(quoting : false);

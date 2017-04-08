@@ -15,7 +15,7 @@ INTO
 FROM
     [Input]       -- Event Hub input name
 WHERE
-    dsplid IN (1)    -- Additional sensors can be added
+    dsplid <= 100 -- Additional sensors can be added
 GROUP BY
     dspl,
     TumblingWindow(second, 1)

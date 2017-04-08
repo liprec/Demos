@@ -10,30 +10,31 @@ For this hands-on-lab bootcamp three parts of CIS are beeing used and connected:
 3. [Azure Machine Learning](https://azure.microsoft.com/en-us/services/machine-learning/)
 
 ### Prerequisites
-An active Azure subscription is needed. A corporate Microsoft Power BI is optional for visualizing the Stream Analytics output.
+
+See the [prerequisites](Prerequisites.md) document for the full list.
 
 ### Scenario
-![](/image/HOLDataScenario.png)
+![](images/HOLDataScenario.png)
 These HOL examples are part of a total data scenario. For this event, the sensor data and event hub (left part) part of the scenario is provided.
 
 #### Lab 1 - Ingest
 When connection data from the Event Hub to Azure Stream Analytics (ASA) it is possible to process that data stream directly and 'query' to either determine outliers of to reroute the data stream.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureStreamAnalytics/)
+[More info](AzureStreamAnalytics/README.md)
 
 #### Lab 2 - Store and prepare
 The rerouted data from Azure Stream Analytics (ASA) can be stored at an Azure Data Lake Store (ADLS) directly in a folder.
 
 After storing the raw data, it is possible to extract information from it by utilizing Azure Data Lake Analytics (ADLA). With U-SQL it is possible to read individual files (JSON) and extract information within one query.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureDataLake/)
+[More info](AzureDataLake/README.md)
 
 #### Lab 3 - Learning
 The result of lab 2 will be used to start learning from the data. By using Azure Machine Learning (AzureML) it is possible to create a ML model that identifies incorrect events and even faulty sensors.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/AzureMachineLearning/)
+[More info](AzureMachineLearning/README.md)
 
 #### Extra - Close the loop
 It is possible to connect an AzureML model to an Azure Stream Analytics Job and use the outcome of that model to predict the incoming events.
 
-[More info](https://github.com/liprec/Demos/tree/master/GlobalAzure/CloseTheLoop/)
+[More info](GlobalAzure/CloseTheLoop/README.md)

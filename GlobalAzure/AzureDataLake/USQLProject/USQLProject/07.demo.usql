@@ -1,0 +1,47 @@
+﻿// Reference assemblies
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+
+// Define start variables
+DECLARE @INPUT_PATH string = "globalazure/2017/04/08/0_1e7196df22614e6695c1e1272288d259.json";
+DECLARE @OUTPUT_PATH string = "globalazure/output/05.demo.out";
+
+// Extract
+@Rows =
+	EXTRACT
+		row string
+	FROM
+		@INPUT_PATH
+	USING
+		Extractors.Text(delimiter: '\n');
+	
+// Transform JSON tuples
+@JSON = 
+	SELECT
+		Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(row) AS json 		
+	FROM
+		@Rows;
+
+// Transform JSON to columns
+@Records =
+	SELECT
+		  Convert.ToDateTime(json["time"]) AS time
+		, Convert.ToInt32(json["dsplid"]) AS dsplid
+		, json["dspl"] AS dspl
+		, Convert.ToInt32(json["temp"]) AS temp
+		, Convert.ToInt32(json["hmdt"]) AS hmdt
+		, json["status"] AS status
+		, Functions.Location.GetBuilding(json["location"]) AS building
+		, Functions.Location.GetFloor(json["location"]) AS floor
+		, Convert.ToDateTime(json["EventProcessedUtcTime"]) AS EventProcessedUtcTime
+		, json["PartitionId"] AS PartitionId
+		, Convert.ToDateTime(json["EventEnqueuedUtcTime"]) AS EventEnqueuedUtcTime
+	FROM
+		@JSON
+	WHERE
+		Functions.Location.GetFloor(json["location"]) != "";
+
+// Output
+OUTPUT @Records
+TO @OUTPUT_PATH
+USING Outputters.Csv(quoting : false);
