@@ -91,3 +91,6 @@ Now that we have looked at (some) capabilities of Azure Stream Analytics fele fr
 
 ### Reference
 ASA query language: https://msdn.microsoft.com/library/azure/dn834998.aspx
+
+---
+[Back](../README.md)

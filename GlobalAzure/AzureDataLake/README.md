@@ -145,3 +145,6 @@ After this lab we have an output file that we are going to use for the next lab.
 
 ### Reference
 See https://github.com/Azure/usql/tree/master/Examples for more examples
+
+---
+[Back](../README.md)
