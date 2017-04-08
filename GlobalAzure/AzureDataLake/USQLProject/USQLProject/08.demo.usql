@@ -3,13 +3,14 @@ REFERENCE ASSEMBLY [Newtonsoft.Json];
 REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
 
 // Define start variables
-DECLARE @INPUT_PATH string = "globalazure/2017/04/08/0_1e7196df22614e6695c1e1272288d259.json";
-DECLARE @OUTPUT_PATH string = "globalazure/output/06.demo.out";
+DECLARE @INPUT_PATH string = "globalazure/{date:yyyy}/{date:MM}/{date:dd}/{*}.json";
+DECLARE @OUTPUT_PATH string = "globalazure/output/08.demo.out";
 
 // Extract
 @Rows =
 	EXTRACT
-		row string
+		  row string
+		, date DateTime // Virtual column
 	FROM
 		@INPUT_PATH
 	USING
@@ -37,7 +38,9 @@ DECLARE @OUTPUT_PATH string = "globalazure/output/06.demo.out";
 		, json["PartitionId"] AS PartitionId
 		, Convert.ToDateTime(json["EventEnqueuedUtcTime"]) AS EventEnqueuedUtcTime
 	FROM
-		@JSON;
+		@JSON
+	WHERE
+		Functions.Location.GetFloor(json["location"]) != "";
 
 // Output
 OUTPUT @Records

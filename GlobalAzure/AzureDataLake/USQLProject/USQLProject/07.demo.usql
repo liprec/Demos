@@ -4,7 +4,7 @@ REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
 
 // Define start variables
 DECLARE @INPUT_PATH string = "globalazure/2017/04/08/0_1e7196df22614e6695c1e1272288d259.json";
-DECLARE @OUTPUT_PATH string = "globalazure/output/05.demo.out";
+DECLARE @OUTPUT_PATH string = "globalazure/output/07.demo.out";
 
 // Extract
 @Rows =

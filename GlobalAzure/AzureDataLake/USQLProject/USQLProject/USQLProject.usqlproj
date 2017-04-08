@@ -27,6 +27,8 @@
     <Script Include="04.demo.usql" />
     <Script Include="05.demo.usql" />
     <Script Include="06.demo.usql" />
+    <Script Include="07.demo.usql" />
+    <Script Include="08.demo.usql" />
     <ScriptCode Include="01. demo.usql.cs">
       <DependentUpon>01. demo.usql</DependentUpon>
     </ScriptCode>
@@ -44,6 +46,12 @@
     </ScriptCode>
     <ScriptCode Include="06.demo.usql.cs">
       <DependentUpon>06.demo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="07.demo.usql.cs">
+      <DependentUpon>07.demo.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="08.demo.usql.cs">
+      <DependentUpon>08.demo.usql</DependentUpon>
     </ScriptCode>
   </ItemGroup>
   <Import Project="$(AppData)\Microsoft\DataLake\MsBuild\1.0\Usql.targets" />
