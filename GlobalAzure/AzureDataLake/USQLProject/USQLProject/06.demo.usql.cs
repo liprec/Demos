@@ -12,11 +12,11 @@ namespace Functions
     {
         public static string GetBuilding(string location)
         {
-            return location.Split(',')[0];
+            return location.Split(',')[0].Trim();
         }
         public static string GetFloor(string location)
         {
-            return location.Split(',')[1];
+            return location.Split(',')[1].Trim();
         }
     }
 }

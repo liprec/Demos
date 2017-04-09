@@ -12,7 +12,7 @@ namespace Functions
     {
         public static string GetBuilding(string location)
         {
-            return location.Split(',')[0];
+            return location.Split(',')[0].Trim();
         }
     }
 }
