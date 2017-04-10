@@ -16,9 +16,10 @@ To continue this integrated lab we need to alter our Azure Stream Analytics job 
 First create a new output to the newly created ADLS:
 1. Open the Azure Stream Analytics blade used in the previous lab
 2. Add an extra output and choose 'Data Lake' as sink
-3. Create a logic 'Path prefix pattern'
-4. Make sure that 'Line Seperated' is selected as format
-5. Save/Create the new output
+3. 'Authorize' the Azure Stream Analytics access to the Azure Data Lake
+4. Create a logic 'Path prefix pattern'
+5. Make sure that 'Line Seperated' is selected as format
+6. Save/Create the new output
 
 ### Alter Azure Stream Analytics job
 Now alter the Azure Stream Analytics job to store all eventhub directly to the Azure Data Lake Store.
@@ -49,7 +50,7 @@ Now that the store is correctly emulated we can start creating our first U-SQL q
 2. Alter the 'start variables' to the correct values
 3. An U-SQL query usally has three parts: 1) extract 2) transform 3) store output. In this query the transform part is eliminated for simplicity
 4. Look at the query and see the following typical parts of an U-SQL query:
-    - UPPPER case syntax is related to SQL
+    - UPPER case syntax is related to SQL
     - CamelCasing syntax is related to C# code
 5. In this query we are using duild-in 'Extractors' and 'Outputters' to extract the individual rows and store the output as CSV file
 6. Run the job by clicking 'Submit'
@@ -63,7 +64,7 @@ First we need Visual Studio to know that there is an Azure Data Lake Analytics a
 2. Sign In with the correct account
 3. Find in the tree the created Azure Data Lake Analytics
 4. Now that Visual Studio knows the Azure Data Lake Analytics account it is possible to submit the job to Azure
-5. Next to the '(local)' you can choose the Azure Data Lake Analytics account
+5. Next to the '(local)' you can choose the Azure Data Lake Analytics account. (Reopen the usql file can help)
 6. Via the 'Advanced' options of 'Submit' we can alter the parameters of the job
 7. At this moment there is no reason to alter the default, but it is possible to alter the parallelism value and also the priority of the job
 8. By pressing 'Submit' the job is runned in Azure and against the Azure Data Lake Store files
@@ -78,9 +79,9 @@ And the last step is the finalizing step which is mainly de-allocating resources
 
 This window can also be viewed online and there is also an estimate of the costs.
 
-![](images/ADLA - Job outcome.png)
+!()[images/ADLA - Job outcome.png]
 
-### Expading input
+### Expanding input
 Now that we have run a job versus one file, an extra dimension of this scenario is that we can run the same query against a dynamic set of files.
 
 With the syntax `{date:yyyy}`, `{date:MM}`, `{date:dd}` and `{date:hh}` we can create the same 'Path prefix pattern' as we used in the output of the Azure Stream Analytics so the job will use all the files we have collected via ASA of our sensors.
