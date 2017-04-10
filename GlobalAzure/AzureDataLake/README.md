@@ -36,7 +36,7 @@ If needed create an Azure Data Lake Analytics resource in the Azure Portal.
 5. After the creating is finished open the blade to continue with the next steps
 
 ### Basic U-SQL query (local)
-The first U-SQL query we are creating is a query to extract rows from all the stored files. Developing and testing of U-SQL queries is doen via Visual Studio, so we need to download a sample JSON file from the store and store it in the correct local path to emulate the ADLS version.
+The first U-SQL query we are creating is a query to extract rows from all the stored files. Developing and testing of U-SQL queries is done via Visual Studio, so we need to download a sample JSON file from the store and store it in the correct local path to emulate the ADLS version.
 
 1. Navigate in the Azure Data Lake Store Data Explorer to a JSON file and click download
 2. Open Visual Studio (2017/2015 with the Azure Data Lake Tools installed) and create a new 'U-SQL Project'
@@ -52,7 +52,7 @@ Now that the store is correctly emulated we can start creating our first U-SQL q
 4. Look at the query and see the following typical parts of an U-SQL query:
     - UPPER case syntax is related to SQL
     - CamelCasing syntax is related to C# code
-5. In this query we are using duild-in 'Extractors' and 'Outputters' to extract the individual rows and store the output as CSV file
+5. In this query we are using build-in 'Extractors' and 'Outputters' to extract the individual rows and store the output as CSV file
 6. Run the job by clicking 'Submit'
 7. Evaluate the output file which can be found in the output folder of the local storage
 

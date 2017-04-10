@@ -4,9 +4,9 @@ REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
 
 // Define start variables
 DECLARE @INPUT_PATH string = "globalazure/{date:yyyy}/{date:MM}/{date:dd}/{*}.json";
-//DECLARE @OUTPUT_PATH string = "globalazure/output/08.demo.out";
+DECLARE @OUTPUT_PATH string = "globalazure/output/08.demo.out";
 // Used for linked Azure Blob storage
-DECLARE @OUTPUT_PATH string = "wasb://adls@globalazurecis/08.demo.out";
+//DECLARE @OUTPUT_PATH string = "wasb://adls@globalazurecis/08.demo.out";
 
 // Extract
 @Rows =
