@@ -62,7 +62,7 @@ With an input and an output we can connect those with a query.
 6. Review the test result
 
 Now we have a default connection between the input and output, but that output is not that valuable for Power BI. The next steps are needed to alter the input to be useful for Power BI.
-1. Alter the query to add some extra logic. See included file [`01 PowerBI - Select query.saql`](01 PowerBI - Select query.saql)
+1. Alter the query to add some extra logic. See included file `01 PowerBI - Select query.saql`
 2. Review the query and understand what the query is achieving
 3. Save the query and test this query by uploading the providede test file
 4. Review the test results and close the query blade
