@@ -79,7 +79,7 @@ And the last step is the finalizing step which is mainly de-allocating resources
 
 This window can also be viewed online and there is also an estimate of the costs.
 
-!()[images/ADLA - Job outcome.png]
+![](images/ADLA - Job outcome.png)
 
 ### Expanding input
 Now that we have run a job versus one file, an extra dimension of this scenario is that we can run the same query against a dynamic set of files.
