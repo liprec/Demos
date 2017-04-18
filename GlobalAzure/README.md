@@ -38,3 +38,6 @@ The result of lab 2 will be used to start learning from the data. By using Azure
 It is possible to connect an AzureML model to an Azure Stream Analytics Job and use the outcome of that model to predict the incoming events.
 
 [More info](GlobalAzure/CloseTheLoop/README.md)
+
+---
+[License](../LICENSE)

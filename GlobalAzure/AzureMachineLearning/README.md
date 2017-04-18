@@ -33,7 +33,7 @@ In our scenario we have +/- 1000 temperature and humidity sensors that generates
 
 Beware: it is an iterative process in which some, or all, steps may be repeated.
 
-### Data extract
+### 1. Data extract
 
 At this moment AzureML is not capable in directly importing data from an Azure Data Lake Storage, so first download the output of the last excersise of the previous lab and save it to disk. And to import the data to Azure ML studio:
 
@@ -45,7 +45,7 @@ At this moment AzureML is not capable in directly importing data from an Azure D
 
 If you didn't finish the previous lab and/or you don't have a correct input file, follow the last portion of thye steps in the next paragraph.
 
-### Data selection
+### 2. Data selection
 
 First step is getting the data into a new experiment.
 
@@ -58,15 +58,15 @@ First step is getting the data into a new experiment.
 You can continue to the next paragraph as the next steps describes the steps if no own file is available.
 If you didn't finish the previous lab and/or you don't have a correct input file, follow these steps:
 
-1. Search for 'Import Data'
-2. Drag the item to the canvas
-3. Configure it with:
+6. Search for 'Import Data'
+7. Drag the item to the canvas
+8. Configure it with:
     - Data Source: Web URL with HTTP
     - Data Source URL: https://globalazurecis.blob.core.windows.net/adls/08.demo.out
     - Keep the rest default
-4. Continue with the rest of the steps
+9. Continue with the rest of the steps
 
-### Preparation
+### 3. Preparation
 
 Now that we have imported a dataset we can examen it. Users that are using the import data items: click on the Play button to download the file.
 1. Right click on the output of the item
@@ -79,18 +79,18 @@ Now that we have imported a dataset we can examen it. Users that are using the i
 4. In this view we can see that there are no column headers, so every column is called: 'col\<number>'
 
 Now we are going to change the header so it easier to work with the data.
-1. Search for the 'Edit Metadata' item
-2. Connect the data output with th input of 'Edit Metadata' item
-3. Click on the 'Launch column selector' to lanch the column selector window
-4. In this window you can select column in different ways:
+5. Search for the 'Edit Metadata' item
+6. Connect the data output with th input of 'Edit Metadata' item
+7. Click on the 'Launch column selector' to lanch the column selector window
+8. In this window you can select column in different ways:
     - By Name: this option is only available if the item has runned (little green checkmark to the right of the text) and the columnnames are known
     - With Rules: with this option you can create in different ways a column selection. First slection is the starting rule: with or without column, so if we are excluding or including columns. After that we can add extra rules to either include or exclude columns by varios rules.
-5. Here we are using the 'With rules' option and we start with all columns as we want to rename all column names
-6. After closing the column selector window paste the following comma seperated string in the 'New column names' textbox
+9. Here we are using the 'With rules' option and we start with all columns as we want to rename all column names
+10. After closing the column selector window paste the following comma seperated string in the 'New column names' textbox
     `time,dsplid,dspl,temp,hmdt,status,building,floor,EventProcessedUtcTime,PartitionId,EventEnqueuedUtcTime`
-7. Run the experiment and take a look al the 'Visualize' windowto validate that the column names are changed
+11. Run the experiment and take a look al the 'Visualize' windowto validate that the column names are changed
 
-### Transformation
+### 4. Transformation
 The operational department has mentioned that there are sensors messages that are not valid and should be ignored. And the way to identify them: there 'status' column is 'O.' So we are going to filter the data
 
 1. Search for the 'Split Data' item
@@ -100,35 +100,26 @@ The operational department has mentioned that there are sensors messages that ar
 
 Before we start with the next part we need to validate if the hypothesis is valid, so we are taking a closer look to the data
 
-1. Search for the 'Apply SQL Transformation'
-2. Connect the 1st output of the 'Split Data' to the 1st input
-3. Paste the following SQL query in the 'SQL Query Script'
+5. Search for the 'Apply SQL Transformation'
+6. Connect the 1st output of the 'Split Data' to the 1st input
+7. Paste the following SQL query in the 'SQL Query Script'
 ```
 select distinct
     temp,
     count(*) cnt
 from t1;
 ```
-4. Run the experiment and validate that our hypothesis is valid
-5. For the next phase we can delete this item
+8. Run the experiment and validate that our hypothesis is valid
+9. For the next phase we can delete this item
 
-Next step is to start create a model and automaticly identify faulted sensors
-
-### Data Mining
-Now that we have out data prepared and in the correct format we can start with the data mining part. There are two types of algoritms:
-- Supervised learning: These algoritm needs to be trained and therefor we know the correct outcome at the start. And we are using related information to create a model that predicts the outcome as close as possible. Typical scenario: we start with a list of all the sensors and a label if it is working yes or no, And we are calculating what attrubites of that sensor are predicting if it is working. Here we can use a clustering algoritm.
-- Unsupervised learning: These algoritm doesn;t need to be trained and uses the whole dataset to create a model. A typical scenario: a list of sensors and there tempuratures and we need to determine which values of which sensor are outliers. This is a case we use a classification algoritm.
-
-At this moment we do not yet know which sensors are faulted, so we are going to use a clustering to determine which temperature values are faulted. And after that we are using a classification the determine if there are other factors that can predict a faulted sensor.
-
-First the clustering:
-1. First select only the `dsplid` and `temp` values with the 'Select Columns in Dataset' item from the dataset (output 'Split Data')
-2. Add a 'K-Means Clustering' item to the canvas and as it only has an output it cannot be connected to another output
-3. Add a 'Train Clustering Model' and connect both the 'K-Means Clustering' and the 'Select Columns in Dataset' to the correct inputs
-4. Select `temp` as the values to be used for the clustering algoritm
-5. Add an 'Edit Metadata' and connect it to the output of the 'Train Clustering Model' item
-6. Select `Assignments` as input column and use 'Make Categorial' as option for 'Categorial' option
-7. Add an 'Apply SQL Transformation' and use the following query to output a list of faulted (1) sensors
+Next step is to automaticly identify faulted sensors via a clustering algoritm:
+10. First select only the `dsplid` and `temp` values with the 'Select Columns in Dataset' item from the dataset (output 'Split Data')
+11. Add a 'K-Means Clustering' item to the canvas and as it only has an output it cannot be connected to another output
+12. Add a 'Train Clustering Model' and connect both the 'K-Means Clustering' and the 'Select Columns in Dataset' to the correct inputs
+13. Select `temp` as the values to be used for the clustering algoritm
+14. Add an 'Edit Metadata' and connect it to the output of the 'Train Clustering Model' item
+15. Select `Assignments` as input column and use 'Make Categorial' as option for 'Categorial' option
+16. Add an 'Apply SQL Transformation' and use the following query to output a list of faulted (1) sensors
 ```
 select
     dsplid,
@@ -136,11 +127,43 @@ select
 from t1
 group by dsplid;
 ```
-8. Run the experiment and validate if there are any sensors that are faulted
+17. Run the experiment and validate if there are any sensors that are faulted
 
 ![](images/Clustering.png)
 
-### Interpretation and evaluation
+### 5. Data Mining
+Now that we have out data prepared and in the correct format we can start with the data mining part.  
+We are using a classification algoritm: Two-Class Support Vector (SVM)
+
+The first step we need to do is to join the 'faulted sensor' dataset with the original prepared dataset
+1. Seach and drag a 'Join Data' item to the canvas
+2. Connect the 'faulted sensor' dataset from the 'Apply SQL Transformation' to the left of the 'Join Data' item
+3. And the right dataset is connected from the 'Split Data' that 's filters the data
+4. Make sure that the key columns for the L and R part are the same: 'dspid'
+5. Run the experiment and validate if the dataset contains the same columns as the original dataset and the 'Assignments' column
+
+After joining the data select only the columns of the original data and the 'Assignments' column of the 'faulted sensor' dataset with a 'Select Columns in Dataset'
+Next step is the creating of a trainings set and a test set for the Two-Class Support Vector alogoritm.
+
+6. Use the 'Split Data' item to split the data equal (0.5) with a random seed of e.g. 1234
+7. Drag a 'Two-Class Support Vector' item to the canvas and
+8. Connect it to a 'Train Model' and use the left part of the 'Split Data' as input for the trainingsset
+9. Be sure that the 'Assignments' is thew labeled column as we want the model to predict that label
+10. To test out model we use a 'Score Model' item to test the model output and the trainingsset output
+11. Run the experiment to validate that the scoring model is working and validate if the predicted labels are as we expected
+
+![](images/two-classed-support-vector.png)
+
+### 6. Interpretation and evaluation
+The last step we are going to do is the evaluation of the calculated model.
+With an 'Evaluate Model' item we can test the input and look at the evaluation graph and see if it is 
+
+![](images/evaluation.png)
+
+### 7. Refinement
+Now that we have a basic model we can refine the model and try to predict the faulted label better. Try to alter some parameters of the SVM model and see if you can create a better scoring model. 
+
+You can create a second scoring stream by adding 'Two-Class Support Vector', 'Train Model' and 'Score Model' items to the canvas and use that outcome as the right input of the 'Evaluate Model' item to compare both models and easily see which one scores better.
 
 ---
-[Back](../README.md)
+[Back](../README.md) | [License](../LICENSE)

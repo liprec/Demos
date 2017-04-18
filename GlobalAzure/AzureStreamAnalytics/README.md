@@ -9,7 +9,7 @@ If needed create an Azure Stream Analytics resource in the Azure Portal.
 3. Create using default / own values
 4. After the creating is finished open the blade to continue with the next steps
 
-### Create Input
+### 1. Create Input
 
 Next step is to create an input for the Azure Stream Analytics job.
 1. In the 'Overview' of the Stream Analytics job blade click on 'Inputs'
@@ -22,7 +22,7 @@ Next step is to create an input for the Azure Stream Analytics job.
 8. Keep the default format and enconding
 9. Click on 'Create' to finilize the input definition
 
-### Sample Input
+### 2. Sample Input
 
 Now that the input is created we can download some sample data that we need when testing the Stream Analytics queries
 
@@ -36,7 +36,7 @@ Now that the input is created we can download some sample data that we need when
 
 With these steps we have created a connection to an event hub that is providing temperature sensor data and have this datastream available as input.
 
-### Create Power BI Output
+### 3. Create Power BI Output
 
 After we created an input for the ASA job, an output is also needed.
 
@@ -50,7 +50,7 @@ After we created an input for the ASA job, an output is also needed.
 
 After the output is created we have a direct output to Power BI and the capability to stream data to a table in a dataset. You can take a look in the Power BI portal, but the dataset and table are not yet created. Those will be created when the job is started.
 
-### Create ASA Job
+### 4. Create ASA Job
 
 With an input and an output we can connect those with a query.
 
@@ -62,14 +62,14 @@ With an input and an output we can connect those with a query.
 6. Review the test result
 
 Now we have a default connection between the input and output, but that output is not that valuable for Power BI. The next steps are needed to alter the input to be useful for Power BI.
-1. Alter the query to add some extra logic. See included file `01 PowerBI - Select query.saql`
-2. Review the query and understand what the query is achieving
-3. Save the query and test this query by uploading the providede test file
-4. Review the test results and close the query blade
+7. Alter the query to add some extra logic. See included file `01 PowerBI - Select query.saql`
+8. Review the query and understand what the query is achieving
+9. Save the query and test this query by uploading the providede test file
+10. Review the test results and close the query blade
 
 After creating the job we can start it by pressing the 'Start' button. It takes some time to allocate resources and to really start.
 
-### Create Power BI dashboard
+### 5. Create Power BI dashboard
 
 In the meantime we can start creating a Power BI dashboard.
 1. Login to the Power BI portal via https://powerbi.com
@@ -79,7 +79,7 @@ In the meantime we can start creating a Power BI dashboard.
 5. Save the report and pin the visual to a new dashboard
 6. Open the dashboard and observe
 
-### Add windowing
+### 6. Add windowing
 
 A typical scenario with streaming data is that we are interested in (average) values during a period of time. Usually one single spike in the observations is not really a problem, but if it us recurring it will be. With Stream Analytics we can create a window and push the values of that window to the output.
 
@@ -93,4 +93,4 @@ Now that we have looked at (some) capabilities of Azure Stream Analytics fele fr
 ASA query language: https://msdn.microsoft.com/library/azure/dn834998.aspx
 
 ---
-[Back](../README.md)
+[Back](../README.md) | [License](../LICENSE)
