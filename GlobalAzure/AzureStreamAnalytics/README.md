@@ -47,7 +47,6 @@ After we created an input for the ASA job, an output is also needed.
 5. Click on authorize and provide login details (work email!) and additional authorizations
 6. After a succesful authorization provide the additional detials, like workspace, dataset and table name
 7. Finish by clicking the 'Create' button 
-
 After the output is created we have a direct output to Power BI and the capability to stream data to a table in a dataset. You can take a look in the Power BI portal, but the dataset and table are not yet created. Those will be created when the job is started.
 
 ### 4. Create ASA Job
@@ -87,7 +86,7 @@ A typical scenario with streaming data is that we are interested in (average) va
 2. Now create a query that creates a window of 1 second and returns only the maximum of the 'temp' and 'hmdt' value
 3. You can of course test your query by uploading the test sample
 
-Now that we have looked at (some) capabilities of Azure Stream Analytics fele free to experiment and look at the result in Power BI.
+Now that we have looked at (some) capabilities of Azure Stream Analytics feel free to experiment and look at the result in Power BI.
 
 ### Reference
 ASA query language: https://msdn.microsoft.com/library/azure/dn834998.aspx
