@@ -1,0 +1,18 @@
+-- Directly select the input information and some extra infomatio
+-- and output directly to Power BI
+SELECT
+    hmdt,
+    temp,
+    time,
+    15 as minTemp,
+    30 as maxTemp,
+    22 as targetTemp,
+    50 as minHmdt,
+    100 as maxHmdt,
+    70 as targetHmdt
+INTO
+    [output]      -- Power BI output name
+FROM
+    [Input]       -- Event Hub input name
+WHERE
+    dsplid <= 100    -- Additional sensors can be added

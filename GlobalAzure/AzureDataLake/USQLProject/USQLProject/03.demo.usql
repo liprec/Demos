@@ -1,0 +1,44 @@
+﻿// Reference assemblies
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY [Microsoft.Analytics.Samples.Formats];
+
+// Define start variables
+DECLARE @INPUT_PATH string = "globalazure/2017/04/08/0_1e7196df22614e6695c1e1272288d259.json";
+DECLARE @OUTPUT_PATH string = "globalazure/output/03.demo.out";
+
+// Extract
+@Rows =
+	EXTRACT
+		row string
+	FROM
+		@INPUT_PATH
+	USING
+		Extractors.Text(delimiter: '\n');
+	
+// Transform JSON tuples
+@JSON = 
+	SELECT
+		Microsoft.Analytics.Samples.Formats.Json.JsonFunctions.JsonTuple(row) AS json 		
+	FROM
+		@Rows;
+
+// Transform JSON to columns
+@Records =
+	SELECT
+		  json["time"] AS time
+		, json["dsplid"] AS dsplid
+		, json["dspl"] AS dspl
+		, json["temp"] AS temp
+		, json["hmdt"] AS hmdt
+		, json["status"] AS status
+		, json["location"] AS location
+		, json["EventProcessedUtcTime"] AS EventProcessedUtcTime
+		, json["PartitionId"] AS PartitionId
+		, json["EventEnqueuedUtcTime"] AS EventEnqueuedUtcTime
+	FROM
+		@JSON;
+
+// Output
+OUTPUT @Records
+TO @OUTPUT_PATH
+USING Outputters.Csv(quoting : false);
