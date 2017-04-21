@@ -79,6 +79,7 @@ Now that we have imported a dataset we can examen it. Users that are using the i
 4. In this view we can see that there are no column headers, so every column is called: 'col\<number>'
 
 Now we are going to change the header so it easier to work with the data.
+
 5. Search for the 'Edit Metadata' item
 6. Connect the data output with th input of 'Edit Metadata' item
 7. Click on the 'Launch column selector' to lanch the column selector window
