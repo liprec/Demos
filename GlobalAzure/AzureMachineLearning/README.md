@@ -114,6 +114,7 @@ from t1;
 9. For the next phase we can delete this item
 
 Next step is to automaticly identify faulted sensors via a clustering algoritm:
+
 10. First select only the `dsplid` and `temp` values with the 'Select Columns in Dataset' item from the dataset (output 'Split Data')
 11. Add a 'K-Means Clustering' item to the canvas and as it only has an output it cannot be connected to another output
 12. Add a 'Train Clustering Model' and connect both the 'K-Means Clustering' and the 'Select Columns in Dataset' to the correct inputs
