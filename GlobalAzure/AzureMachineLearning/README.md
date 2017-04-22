@@ -117,11 +117,12 @@ Next step is to automaticly identify faulted sensors via a clustering algoritm:
 
 10. First select only the `dsplid` and `temp` values with the 'Select Columns in Dataset' item from the dataset (output 'Split Data')
 11. Add a 'K-Means Clustering' item to the canvas and as it only has an output it cannot be connected to another output
-12. Add a 'Train Clustering Model' and connect both the 'K-Means Clustering' and the 'Select Columns in Dataset' to the correct inputs
-13. Select `temp` as the values to be used for the clustering algoritm
-14. Add an 'Edit Metadata' and connect it to the output of the 'Train Clustering Model' item
-15. Select `Assignments` as input column and use 'Make Categorial' as option for 'Categorial' option
-16. Add an 'Apply SQL Transformation' and use the following query to output a list of faulted (1) sensors
+12. Add a Random Seed of 1234 to the 'K-Means Clustering' item
+13. Add a 'Train Clustering Model' and connect both the 'K-Means Clustering' and the 'Select Columns in Dataset' to the correct inputs
+14. Select `temp` as the values to be used for the clustering algoritm
+15. Add an 'Edit Metadata' and connect it to the output of the 'Train Clustering Model' item
+16. Select `Assignments` as input column and use 'Make Categorial' as option for 'Categorial' option
+17. Add an 'Apply SQL Transformation' and use the following query to output a list of faulted (1) sensors
 ```
 select
     dsplid,
@@ -129,7 +130,7 @@ select
 from t1
 group by dsplid;
 ```
-17. Run the experiment and validate if there are any sensors that are faulted
+18. Run the experiment and validate if there are any sensors that are faulted
 
 ![](images/Clustering.png)
 
