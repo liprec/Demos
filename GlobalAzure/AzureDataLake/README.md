@@ -46,6 +46,7 @@ The first U-SQL query we are creating is a query to extract rows from all the st
 6. Copy the file to the path above with the same 'Path prefix pattern' as configured in the previous steps to mimic the ADLS
 
 Now that the store is correctly emulated we can start creating our first U-SQL query
+
 7. Open the `01. Script.usql` script file and copy the content to your own version
 8. Alter the 'start variables' to the correct values
 9. An U-SQL query usally has three parts: 1) extract 2) transform 3) store output. In this query the transform part is eliminated for simplicity
