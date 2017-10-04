@@ -1,8 +1,8 @@
 {
   "visual": {
-    "name": "demoVisual",
-    "displayName": "DemoVisual",
-    "guid": "PBI_CV_CA3EAC73_FCA2_428A_AA5B_CA4DB4ADD2A4",
+    "name": "testing",
+    "displayName": "testing",
+    "guid": "testing7E612C2C0D56480C876F9EECE1E3802D",
     "visualClassName": "Visual",
     "version": "1.0.0",
     "description": "",
@@ -21,7 +21,7 @@
     "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"
   ],
   "style": "style/visual.less",
-  "capabilities": "capabilities.demo-1.json",
+  "capabilities": "capabilities.json",
   "dependencies": "dependencies.json",
   "stringResources": []
 }

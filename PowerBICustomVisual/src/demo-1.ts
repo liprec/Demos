@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright (c) 2016 Jan Pieter Posthuma
+ * Copyright (c) 2017 Jan Pieter Posthuma / DataScenarios
  * 
  * All rights reserved.
  * 
@@ -27,13 +27,14 @@
  */
 
 /*
- * Demo 2:
+ * Demo 1:
  *     - Defining DataView structure
  *     - Converting DataView to readable visual data
  *     - Use readable visual data for visualization
  */
 
 module powerbi.extensibility.visual {
+    "use strict";
     // Single visual dataPoint
     export interface VisualDataPoint {
         category: string;
@@ -48,6 +49,35 @@ module powerbi.extensibility.visual {
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
+
+        constructor(options: VisualConstructorOptions) {
+            console.log('Visual constructor', options);
+            this.target = options.element;
+            this.updateCount = 0;
+        }
+
+        public update(options: VisualUpdateOptions) {
+            console.log('Visual update', options);
+
+            // Clear old information
+            this.target.innerHTML = "";
+            
+            // Convert dataView object to usable dataPoints
+            let visualDataPoints: VisualDataPoints = this.convertor(options.dataViews[0]);
+            let dataPoints: VisualDataPoint[] = visualDataPoints.dataPoints;
+
+            // Loop thru dataPoints and print content (category and value) 
+            for (let i = 0; i < dataPoints.length; i++) {
+                this.target.innerHTML += `<p>DataPoint (${(i.toString())}): category: </p>
+                    <div>${(dataPoints[i].category)}</div>
+                    <p>and value: </p>
+                    <div>${(dataPoints[i].value)}</div>`;
+            }
+        }
+
+        public destroy(): void {
+            //TODO: Perform any cleanup tasks here
+        }
 
         private convertor(dataView: DataView) : VisualDataPoints {
             // Check if given dataView is not empty
@@ -67,8 +97,8 @@ module powerbi.extensibility.visual {
             // Loop thru category values
             for (let i = 0; i < categories.length; i++) {
                 // Get category and value
-                let category = categories[i];
-                let value = values[i];
+                let category: string = categories[i] as string;
+                let value = values[i] as number;
 
                 // Create dataPoint and push it into the dataPoints array
                 dataPoints.push({
@@ -81,32 +111,6 @@ module powerbi.extensibility.visual {
             return {
                 dataPoints: dataPoints
             }
-        }
-
-        constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor', options);
-            this.target = options.element;
-            this.updateCount = 0;
-        }
-
-        public update(options: VisualUpdateOptions) {
-            console.log('Visual update', options);
-
-            // Clear old information
-            this.target.innerHTML = "";
-            
-            // Convert dataView object to usable dataPoints
-            let visualDataPoints = this.convertor(options.dataViews[0]);
-            let dataPoints = visualDataPoints.dataPoints;
-
-            // Loop thru dataPoints and print content (category and value) 
-            for (let i = 0; i < dataPoints.length; i++) {
-                this.target.innerHTML += `<p>DataPoint: category: <em>${(dataPoints[i].category)}</em> and value <em>${(dataPoints[i].value)}</em></p>`;
-            }
-        }
-
-        public destroy(): void {
-            //TODO: Perform any cleanup tasks here
         }
     }
 }

@@ -55,6 +55,18 @@ declare module powerbi {
         Edit = 1,
         InFocusEdit = 2,
     }
+    const enum EditMode {
+        Default = 0,
+        Advanced = 1
+    }
+    const enum AdvancedEditModeSupport {
+        /** The visual doesn't support Advanced Edit mode. Do not display the 'Edit' button on this visual. */
+        NotSupported = 0,
+        /** The visual supports Advanced Edit mode, but doesn't require any further changes aside from setting EditMode=Advanced. */
+        None = 1,
+        /** The visual supports Advanced Edit mode, and requires that the host pops out the visual when entering Advanced EditMode. */
+        InFocus = 2,
+    }
     const enum ResizeMode {
         Resizing = 1,
         Resized = 2,
@@ -297,6 +309,13 @@ declare module powerbi {
 
 
 declare module powerbi {
+    export interface QueryTransformTypeDescriptor {
+    }
+}﻿
+
+
+
+declare module powerbi {
     /** Represents views of a data set. */
     export interface DataView {
         metadata: DataViewMetadata;
@@ -349,6 +368,9 @@ declare module powerbi {
         /** The sort direction of this column. */
         sort?: SortDirection;
 
+        /** The order sorts are applied. Lower values are applied first. Undefined indicates no sort was done on this column. */
+        sortOrder?: number;
+
         /** The KPI metadata to use to convert a numeric status value into its visual representation. */
         kpi?: DataViewKpiColumnMetadata;
 
@@ -360,6 +382,13 @@ declare module powerbi {
 
         /** The SQExpr this column represents. */
         expr?: data.ISQExpr;
+
+        /**
+         * The set of expressions that define the identity for instances of this grouping field.
+         * This must be a subset of the items in the DataViewScopeIdentity in the grouped items result.
+         * This property is undefined for measure fields, as well as for grouping fields in DSR generated prior to the CY16SU08 or SU09 timeframe.
+         */
+        identityExprs?: data.ISQExpr[];
     }
 
     export interface DataViewSegmentMetadata {
@@ -504,13 +533,18 @@ declare module powerbi {
     }
 
     export interface DataViewTableRow extends Array<PrimitiveValue> {
-        /** The metadata repetition objects. */
+        /** The data repetition objects. */
         objects?: DataViewObjects[];
     }
 
     export interface DataViewMatrix {
         rows: DataViewHierarchy;
         columns: DataViewHierarchy;
+
+        /**
+         * The metadata columns of the measure values.
+         * In visual DataView, this array is sorted in projection order.
+         */
         valueSources: DataViewMetadataColumn[];
     }
 
@@ -571,6 +605,9 @@ declare module powerbi {
     export interface DataViewMatrixNodeValue extends DataViewTreeNodeValue {
         highlight?: PrimitiveValue;
 
+        /** The data repetition objects. */
+        objects?: DataViewObjects;
+
         /** Indicates the index of the corresponding measure (held by DataViewMatrix.valueSources). Its value is 0 if omitted. */
         valueSourceIndex?: number;
     }
@@ -581,6 +618,10 @@ declare module powerbi {
     }
 
     export interface DataViewHierarchyLevel {
+        /**
+         * The metadata columns of this hierarchy level.
+         * In visual DataView, this array is sorted in projection order.
+         */
         sources: DataViewMetadataColumn[];
     }
 
@@ -595,6 +636,17 @@ declare module powerbi {
     export interface DataViewScriptResultData {
         payloadBase64: string;
     }
+
+    export interface ValueRange<T> {
+        min?: T;
+        max?: T;
+    }
+
+    /** Defines the acceptable values of a number. */
+    export type NumberRange = ValueRange<number>;
+
+    /** Defines the PrimitiveValue range. */
+    export type PrimitiveValueRange = ValueRange<PrimitiveValue>;
 }﻿
 
 
@@ -893,6 +945,7 @@ declare module powerbi {
         image?: ImageTypeDescriptor;
         paragraphs?: ParagraphsTypeDescriptor;
         geoJson?: GeoJsonTypeDescriptor;
+        queryTransform?: QueryTransformTypeDescriptor;
 
         //border?: BorderTypeDescriptor;
         //etc.
@@ -922,6 +975,9 @@ declare module powerbi {
         enumeration?: IEnumType;
         scripting?: ScriptTypeDescriptor;
         operations?: OperationalTypeDescriptor;
+
+        // variant types
+        variant?: ValueTypeDescriptor[];
     }
 
     export interface ScriptTypeDescriptor {
@@ -964,6 +1020,7 @@ declare module powerbi {
         labelDisplayUnits?: boolean;
         fontSize?: boolean;
         labelDensity?: boolean;
+        bubbleSize?: boolean;
     }
 
     export interface OperationalTypeDescriptor {
@@ -1003,16 +1060,25 @@ declare module powerbi {
         /** The selector that identifies this object. */
         selector: Selector;
 
-        /** Defines the constrained set of valid values for a property. */
+        /** (Optional) Defines the constrained set of valid values for a property. */
         validValues?: {
-            [propertyName: string]: string[];
+            [propertyName: string]: string[] | ValidationOptions;
         };
 
         /** (Optional) VisualObjectInstanceEnumeration category index. */
         containerIdx?: number;
+
+        /** (Optional) Set the required type for particular properties that support variant types. */
+        propertyTypes?: {
+            [propertyName: string]: ValueTypeDescriptor;
+        };
     }
 
     export type VisualObjectInstanceEnumeration = VisualObjectInstance[] | VisualObjectInstanceEnumerationObject;
+
+    export interface ValidationOptions {
+        numberRange?: NumberRange;
+    }
 
     export interface VisualObjectInstanceEnumerationObject {
         /** The visual object instances. */
@@ -1117,6 +1183,7 @@ declare module powerbi.extensibility {
         hasSelection(): boolean;
         clear(): IPromise<{}>;
         getSelectionIds(): ISelectionId[];
+        applySelectionFilter(): void;
     }
 }
 
@@ -1131,10 +1198,13 @@ declare module powerbi.extensibility {
         withMeasure(measureId: string): this;
         createSelectionId(): ISelectionId;
     }
-
-    function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
 }
 
+
+
+declare module powerbi.extensibility {
+    function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
+}
 
 
 
@@ -1144,8 +1214,44 @@ declare module powerbi.extensibility {
     }
 }
 
+
+
+
+declare module powerbi.extensibility {
+    interface VisualTooltipDataItem {
+        displayName: string;
+        value: string;
+        color?: string;
+        header?: string;
+        opacity?: string;
+    }
+    
+    interface TooltipMoveOptions {
+        coordinates: number[];
+        isTouchEvent: boolean;
+        dataItems?: VisualTooltipDataItem[];
+        identities: ISelectionId[];
+    }
+
+    interface TooltipShowOptions extends TooltipMoveOptions {
+        dataItems: VisualTooltipDataItem[];
+    }
+
+    interface TooltipHideOptions {
+        isTouchEvent: boolean;
+        immediately: boolean;
+    }
+
+    interface ITooltipService {
+        enabled(): boolean;
+        show(options: TooltipShowOptions): void;
+        move(options: TooltipMoveOptions): void;
+        hide(options: TooltipHideOptions): void;
+    }
+}
+
 /**
- * Change Log Version 1.2.0
+ * Change Log Version 1.6.0
  */
 
 
@@ -1171,6 +1277,9 @@ declare module powerbi.extensibility.visual {
         createSelectionManager: () => ISelectionManager;
         colorPalette: IColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
+        tooltipService: ITooltipService;
+        locale: string;
+		allowInteractions: () => boolean;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
@@ -1178,6 +1287,7 @@ declare module powerbi.extensibility.visual {
         dataViews: DataView[];
         type: VisualUpdateType;
         viewMode?: ViewMode;
+        editMode?: EditMode;
     }
 
     export interface VisualConstructorOptions extends extensibility.VisualConstructorOptions {
@@ -1185,4 +1295,3 @@ declare module powerbi.extensibility.visual {
         host: IVisualHost;
     }
 }
-

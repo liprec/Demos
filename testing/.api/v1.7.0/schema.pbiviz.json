@@ -1,5 +1,5 @@
 {
-    "PBI_API_VERSION": "v1.2.0",
+    "PBI_API_VERSION": "v1.7.0",
     "type": "object",
     "properties": {
         "apiVersion": {
@@ -36,7 +36,15 @@
             "items": {
                 "type": "string"
             }
-        },        
+        },
+        "stringResources": {
+            "type": "array",
+            "description": "An array of relative paths to string resources to load",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },         
         "style" : {
             "type": "string",
             "description": "Relative path to the stylesheet (less) for the visual"
@@ -44,10 +52,6 @@
         "capabilities": {
             "type": "string",
             "description": "Relative path to the visual capabilities json file"
-        },
-        "dependencies": {
-            "type": "string",
-            "description": "Relative path to the visual dependencies json file"
         },
         "visual": {
             "type": "object",
