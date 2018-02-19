@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright (c) 2017 Jan Pieter Posthuma / DataScenarios
+ * Copyright (c) 2018 Jan Pieter Posthuma / DataScenarios
  * 
  * All rights reserved.
  * 
@@ -28,11 +28,12 @@
 
 /*
  * Demo 2:
- *     - Define formating options (capabilities)
- *     - Read the formatting options for use in the visual
+ *     - Converting DataView to readable visual data
+ *     - Use readable visual data for visualization
  */
 
 module powerbi.extensibility.visual {
+    "use strict";
     // Single visual dataPoint
     export interface VisualDataPoint {
         category: string;
@@ -54,39 +55,6 @@ module powerbi.extensibility.visual {
             console.log('Visual constructor', options);
             this.target = options.element;
             this.updateCount = 0;
-        }
-
-        public update(options: VisualUpdateOptions) {
-            console.log('Visual update', options);
-            // Parse settings
-            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-
-            // Store dataView object
-            this.dataView = options.dataViews[0];
-
-            // Clear old information
-            this.target.innerHTML = "";
-            
-            // Convert dataView object to usable dataPoints
-            let visualDataPoints: VisualDataPoints = this.convertor(options.dataViews[0]);
-            let dataPoints: VisualDataPoint[] = visualDataPoints.dataPoints;
-
-            // Add header depending on settings
-            let objects = this.dataView.metadata.objects; // Get metadata object
-
-            if (this.settings.dataPoint.showAllDataPoints) {
-                // Loop thru dataPoints and print content (category and value) 
-                for (let i = 0; i < dataPoints.length; i++) {
-                    this.target.innerHTML += `<p>DataPoint (${(i.toString())}): category: </p>
-                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].category)}</div>
-                        <p>and value: </p>
-                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].value)}</div>`;
-                }
-            }
-        }
-
-        public destroy(): void {
-            //TODO: Perform any cleanup tasks here
         }
 
         private convertor(dataView: DataView) : VisualDataPoints {
@@ -123,6 +91,36 @@ module powerbi.extensibility.visual {
             }
         }
 
+        public update(options: VisualUpdateOptions) {
+            console.log('Visual update', options);
+            // Parse settings
+            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+
+            // Store dataView object
+            this.dataView = options.dataViews[0];
+
+            // Clear old information
+            this.target.innerHTML = "";
+            
+            // Convert dataView object to usable dataPoints
+            let visualDataPoints: VisualDataPoints = this.convertor(options.dataViews[0]);
+            let dataPoints: VisualDataPoint[] = visualDataPoints.dataPoints;
+
+            // Add header depending on settings
+            let objects = this.dataView.metadata.objects; // Get metadata object
+
+            if (this.settings.dataPoint.showAllDataPoints) {
+                // Loop thru dataPoints and print content (category and value) 
+                for (let i = 0; i < dataPoints.length; i++) {
+                    this.target.innerHTML += `<p>DataPoint (${(i.toString())}): category: </p>
+                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].category)}</div>
+                        <p>and value: </p>
+                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].value)}</div>`;
+                }
+            }
+
+        }
+
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
@@ -135,6 +133,5 @@ module powerbi.extensibility.visual {
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
             return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
-
     }
 }

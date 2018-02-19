@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright (c) 2017 Jan Pieter Posthuma / DataScenarios
+ * Copyright (c) 2018 Jan Pieter Posthuma / DataScenarios
  * 
  * All rights reserved.
  * 
@@ -28,27 +28,15 @@
 
 /*
  * Demo 1:
- *     - Defining DataView structure
- *     - Converting DataView to readable visual data
- *     - Use readable visual data for visualization
+ *     - Default OOB custom visual
  */
 
 module powerbi.extensibility.visual {
     "use strict";
-    // Single visual dataPoint
-    export interface VisualDataPoint {
-        category: string;
-        value: number;
-    }
-
-    // Collection of visual dataPoint. Length === # categories 
-    export interface VisualDataPoints {
-        dataPoints: VisualDataPoint[]
-    }
-
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
+        private settings: VisualSettings;
 
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
@@ -57,60 +45,22 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
+            this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
             console.log('Visual update', options);
-
-            // Clear old information
-            this.target.innerHTML = "";
-            
-            // Convert dataView object to usable dataPoints
-            let visualDataPoints: VisualDataPoints = this.convertor(options.dataViews[0]);
-            let dataPoints: VisualDataPoint[] = visualDataPoints.dataPoints;
-
-            // Loop thru dataPoints and print content (category and value) 
-            for (let i = 0; i < dataPoints.length; i++) {
-                this.target.innerHTML += `<p>DataPoint (${(i.toString())}): category: </p>
-                    <div>${(dataPoints[i].category)}</div>
-                    <p>and value: </p>
-                    <div>${(dataPoints[i].value)}</div>`;
-            }
+            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
         }
 
-        public destroy(): void {
-            //TODO: Perform any cleanup tasks here
+        private static parseSettings(dataView: DataView): VisualSettings {
+            return VisualSettings.parse(dataView) as VisualSettings;
         }
 
-        private convertor(dataView: DataView) : VisualDataPoints {
-            // Check if given dataView is not empty
-            if (!dataView ||
-                !dataView.categorical ||
-                !dataView.categorical.categories ||
-                !dataView.categorical.categories[0].source) {
-                return {
-                    dataPoints: []
-                }
-            }
-
-            let dataPoints: VisualDataPoint[] = [];
-            let categories = dataView.categorical.categories[0].values;
-            let values = dataView.categorical.values[0].values;
-
-            // Loop thru category values
-            for (let i = 0; i < categories.length; i++) {
-                // Get category and value
-                let category: string = categories[i] as string;
-                let value = values[i] as number;
-
-                // Create dataPoint and push it into the dataPoints array
-                dataPoints.push({
-                    category: category,
-                    value: value
-                })
-            }
-
-            // Return dataPoints array
-            return {
-                dataPoints: dataPoints
-            }
+        /** 
+         * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
+         * objects and properties you want to expose to the users in the property pane.
+         * 
+         */
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+            return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
         }
     }
 }
