@@ -81,6 +81,12 @@ declare namespace powerbi {
         /** Should be used by visuals to trace errors in PBI telemetry. */
         Error = 3,
     }
+    const enum FilterAction {
+        /** Merging filter into existing filters. */
+        merge = 0,
+        /** removing existing filter. */
+        remove = 1,
+    }
 }
 ﻿
 
@@ -1261,6 +1267,7 @@ declare module powerbi.extensibility {
         clear(): IPromise<{}>;
         getSelectionIds(): ISelectionId[];
         applySelectionFilter(): void;
+        registerOnSelectCallback(callback: (ids: ISelectionId[]) => void): void;
     }
 }
 
@@ -1280,6 +1287,47 @@ declare module powerbi.extensibility {
 declare module powerbi.extensibility {
     export interface IColorPalette {
         getColor(key: string): IColorInfo;
+        reset(): IColorPalette;
+    }
+    
+    /**
+     * Interface for expanded color palette.
+     * 
+     * isHighContrast: boolean - when true, indicates that high-contrast accesibility support is active. Draw the visual using only foreground and background colors, and clearly visible strokes.
+     * 
+     * Also exposes non-data colors: foreground and variants, background and variants, sentiment indicators (positive, neutral, negative) and some specifc colors (e.g. hyperlink)
+     */
+    export interface ISandboxExtendedColorPalette extends IColorPalette {
+        isHighContrast: boolean;
+        /* foreground variants*/
+        foreground: IColorInfo; /* Also used in High-contrast accessibility mode */
+        foregroundLight: IColorInfo;
+        foregroundDark: IColorInfo;
+        foregroundNeutralLight: IColorInfo;
+        foregroundNeutralDark: IColorInfo;
+        foregroundNeutralSecondary: IColorInfo;
+        foregroundNeutralSecondaryAlt: IColorInfo;
+        foregroundNeutralSecondaryAlt2: IColorInfo;
+        foregroundNeutralTertiary: IColorInfo;
+        foregroundNeutralTertiaryAlt: IColorInfo;
+        foregroundSelected: IColorInfo; /* Used only in High-contrast accessibility mode */
+        foregroundButton: IColorInfo;
+        /* background variants*/
+        background: IColorInfo; /* Also used in High-contrast accessibility mode */
+        backgroundLight: IColorInfo;
+        backgroundNeutral: IColorInfo;
+        backgroundDark: IColorInfo;
+        /* specific purpose colors*/
+        hyperlink: IColorInfo; /* Also used in High-contrast accessibility mode */
+        visitedHyperlink: IColorInfo;
+        mapPushpin: IColorInfo;
+        shapeStroke: IColorInfo;
+        selection?: IColorInfo;
+        separator?: IColorInfo;
+        /* sentiment indicators */
+        negative?: IColorInfo;
+        neutral?: IColorInfo;
+        positive?: IColorInfo;
     }
 }
 
@@ -1330,12 +1378,26 @@ declare module powerbi.extensibility {
     export function VisualPlugin (options: IVisualPluginOptions): ClassDecorator;
 }
 
+declare module powerbi.extensibility {
+    export interface ILocalizationManager {
+        getDisplayName(key: string): string; 
+    }
+}
+
+declare module powerbi.extensibility {
+    export interface IAuthenticationService {
+        getAADToken(visualId?: string): IPromise<string>;
+    }
+}
+
 declare module powerbi {
     export interface IFilter { }
 }
 
 /**
- * Change Log Version 1.7.0
+ * Change Log Version 1.13.0
+ *  Expanded `host.colorPalette` now expose a boolean `isHighContrast` flag and several non-data colors 
+ *  including `foreground`, `foregroundSelected`, `background` and `hyperlink` all of which are required for high-contrast accessibility support.
  */
 
 declare module powerbi.extensibility.visual {
@@ -1357,13 +1419,19 @@ declare module powerbi.extensibility.visual {
     export interface IVisualHost extends extensibility.IVisualHost {
         createSelectionIdBuilder: () => visuals.ISelectionIdBuilder;
         createSelectionManager: () => ISelectionManager;
-        colorPalette: IColorPalette;
+        colorPalette: ISandboxExtendedColorPalette;
         persistProperties: (changes: VisualObjectInstancesToPersist) => void;
-        applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string) => void;
+        applyJsonFilter: (filter: IFilter, objectName: string, propertyName: string, action: FilterAction) => void;
         tooltipService: ITooltipService;
         telemetry: ITelemetryService;
+        authenticationService: IAuthenticationService;
         locale: string;
         allowInteractions: boolean;
+        launchUrl: (url: string) => void;
+        fetchMoreData: () => boolean;
+        instanceId: string;
+        refreshHostData: () => void;
+        createLocalizationManager: () => ILocalizationManager;
     }
 
     export interface VisualUpdateOptions extends extensibility.VisualUpdateOptions {
@@ -1372,6 +1440,7 @@ declare module powerbi.extensibility.visual {
         type: VisualUpdateType;
         viewMode?: ViewMode;
         editMode?: EditMode;
+        operationKind?: VisualDataChangeOperationKind;
     }
 
     export interface VisualConstructorOptions extends extensibility.VisualConstructorOptions {

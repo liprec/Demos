@@ -1,21 +1,21 @@
 /*
- * 
+ *
  * Copyright (c) 2018 Jan Pieter Posthuma / DataScenarios
- * 
+ *
  * All rights reserved.
- * 
+ *
  * MIT License.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,9 +40,9 @@ module powerbi.extensibility.visual {
         value: number;
     }
 
-    // Collection of visual dataPoint. Length === # categories 
+    // Collection of visual dataPoint. Length === # categories
     export interface VisualDataPoints {
-        dataPoints: VisualDataPoint[]
+        dataPoints: VisualDataPoint[];
     }
 
     export class Visual implements IVisual {
@@ -57,7 +57,7 @@ module powerbi.extensibility.visual {
             this.updateCount = 0;
         }
 
-        private convertor(dataView: DataView) : VisualDataPoints {
+        private convertor(dataView: DataView): VisualDataPoints {
             // Check if given dataView is not empty
             if (!dataView ||
                 !dataView.categorical ||
@@ -65,7 +65,7 @@ module powerbi.extensibility.visual {
                 !dataView.categorical.categories[0].source) {
                 return {
                     dataPoints: []
-                }
+                };
             }
 
             let dataPoints: VisualDataPoint[] = [];
@@ -82,13 +82,13 @@ module powerbi.extensibility.visual {
                 dataPoints.push({
                     category: category,
                     value: value
-                })
+                });
             }
 
             // Return dataPoints array
             return {
                 dataPoints: dataPoints
-            }
+            };
         }
 
         public update(options: VisualUpdateOptions) {
@@ -101,7 +101,7 @@ module powerbi.extensibility.visual {
 
             // Clear old information
             this.target.innerHTML = "";
-            
+
             // Convert dataView object to usable dataPoints
             let visualDataPoints: VisualDataPoints = this.convertor(options.dataViews[0]);
             let dataPoints: VisualDataPoint[] = visualDataPoints.dataPoints;
@@ -110,25 +110,45 @@ module powerbi.extensibility.visual {
             let objects = this.dataView.metadata.objects; // Get metadata object
 
             if (this.settings.dataPoint.showAllDataPoints) {
-                // Loop thru dataPoints and print content (category and value) 
+                // Loop thru dataPoints and print content (category and value)
                 for (let i = 0; i < dataPoints.length; i++) {
-                    this.target.innerHTML += `<p>DataPoint (${(i.toString())}): category: </p>
-                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].category)}</div>
-                        <p>and value: </p>
-                        <div style="color:${(this.settings.dataPoint.defaultColor)};font-size: ${(this.settings.dataPoint.fontSize)}px">${(dataPoints[i].value)}</div>`;
+                    // Create 'Datapoint (x) category' paragraph
+                    const p_category: HTMLElement = document.createElement("p");
+                    p_category.appendChild(document.createTextNode(`DataPoint (${(i.toString())}): category:`));
+
+                    // Create formatted category div
+                    const div_category: HTMLElement = document.createElement("div");
+                    div_category.style.color = this.settings.dataPoint.defaultColor;
+                    div_category.style.fontSize = this.settings.dataPoint.fontSize + "px";
+                    div_category.appendChild(document.createTextNode(dataPoints[i].category.toString()));
+
+                    // Create 'and value' paragraph
+                    const p_value: HTMLElement = document.createElement("p");
+                    p_value.appendChild(document.createTextNode(" and value:"));
+
+                    // Create formatted value div
+                    const div_value: HTMLElement = document.createElement("div");
+                    div_value.style.color = this.settings.dataPoint.defaultColor;
+                    div_value.style.fontSize = this.settings.dataPoint.fontSize + "px";
+                    div_value.appendChild(document.createTextNode(dataPoints[i].value.toString()));
+
+                    // Append all parts to the main element
+                    this.target.appendChild(p_category);
+                    this.target.appendChild(div_category);
+                    this.target.appendChild(p_value);
+                    this.target.appendChild(div_value);
                 }
             }
-
         }
 
         private static parseSettings(dataView: DataView): VisualSettings {
             return VisualSettings.parse(dataView) as VisualSettings;
         }
 
-        /** 
+        /**
          * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
          * objects and properties you want to expose to the users in the property pane.
-         * 
+         *
          */
         public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
             return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
