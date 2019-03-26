@@ -9,7 +9,7 @@
     "supportUrl": "",
     "gitHubUrl": ""
   },
-  "apiVersion": "1.13.0",
+  "apiVersion": "2.3.0",
   "author": {
     "name": "",
     "email": ""
@@ -21,7 +21,7 @@
     "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js"
   ],
   "style": "style/visual.less",
-  "capabilities": "capabilities.demo-2.json",
+  "capabilities": "capabilities.demo-1.json",
   "dependencies": "dependencies.json",
   "stringResources": []
 }
